@@ -6,17 +6,11 @@ const brandSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  brandId: {
-    type: mongoose.Schema.Types.ObjectId, // Kiểu ObjectId (giống _id mặc định)
-    default: () => new mongoose.Types.ObjectId(), // Tự động sinh giá trị mới
-    required: true,
-    alias: "_id", // Cho phép truy vấn bằng cả `productId` và `_id`
-  },
-  brandCreatedAt: {
+  createdAt: {
     type: Number,
     default: () => moment().valueOf(),
   },
-  brandUpdatedAt: {
+  updatedAt: {
     type: Number,
   },
   foundedDate: {

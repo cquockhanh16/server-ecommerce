@@ -14,4 +14,8 @@ router.post(
 
 router.post("/product/list", ProductController.getListProduct);
 
+router.post("/product/find", ProductController.findProductByName);
+
+router.get("/product/detail/:id", ProductController.getDetailProduct);
+
 module.exports = router;

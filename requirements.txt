@@ -30,3 +30,5 @@ Admin
 •	Quản lý nội dung banner, bài viết, thông tin trang web
 •	Thống kê sản phẩm, doanh thu, đơn hàng
 
+sort price, name, created, sold
+https://server-ecommerce-20bb.onrender.com

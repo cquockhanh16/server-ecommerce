@@ -6,17 +6,11 @@ const categorySchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  categoryId: {
-    type: mongoose.Schema.Types.ObjectId, // Kiểu ObjectId (giống _id mặc định)
-    default: () => new mongoose.Types.ObjectId(), // Tự động sinh giá trị mới
-    required: true,
-    alias: "_id", // Cho phép truy vấn bằng cả `productId` và `_id`
-  },
-  categoryCreatedAt: {
+  createdAt: {
     type: Number,
     default: () => moment().valueOf(),
   },
-  categoryUpdatedAt: {
+  updatedAt: {
     type: Number,
   },
   categoryRoot: {

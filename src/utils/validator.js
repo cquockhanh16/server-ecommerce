@@ -35,10 +35,15 @@ const isEmpty = (arg) => {
   return false;
 };
 
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
 module.exports = {
   isValidArray,
   isValidNumber,
   isValidString,
   isEmpty,
   isValidStringToArray,
+  isValidEmail,
 };
