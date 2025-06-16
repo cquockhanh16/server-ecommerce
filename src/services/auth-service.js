@@ -63,10 +63,14 @@ class AuthService {
         const { email, password } = body;
 
         if (!isValidString(email)) {
-          throw new ValidatorError("Email không được để trống");
+          throw new ValidatorError("Email không được để trống", "email", email);
         }
         if (!isValidEmail(email)) {
-          throw new ValidatorError("Email không đúng định dạng");
+          throw new ValidatorError(
+            "Email không đúng định dạng",
+            "email",
+            email
+          );
         }
         const existIdentity = await Identity.findOne({ email });
         if (!existIdentity) {

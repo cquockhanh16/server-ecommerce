@@ -27,6 +27,9 @@ const brandRouter = require("./routers/brand-router");
 const collectionRouter = require("./routers/collection-router");
 const categoryRouter = require("./routers/category-router");
 const authRouter = require("./routers/auth-router");
+const identityRouter = require("./routers/identity-router");
+const orderRouter = require("./routers/order-router");
+const paymentRouter = require("./routers/payment-router");
 
 app.set("view engine", "ejs"); // Đặt view engine là EJS
 app.set("views", path.join(__dirname, "views")); // Thư mục chứa các file EJS
@@ -62,6 +65,9 @@ app.use("/api", categoryRouter);
 app.use("/api", brandRouter);
 app.use("/api", collectionRouter);
 app.use("/api", authRouter);
+app.use("/api", identityRouter);
+app.use("/api", orderRouter);
+app.use("/api", paymentRouter);
 
 // handle api not declared
 app.use((req, res) => {
@@ -72,8 +78,12 @@ app.use((req, res) => {
 
 // router handle error
 app.use(async (error, req, res, next) => {
-  if (req.file && req.file.path) {
+  if (req?.file && req?.file?.path) {
     await deleteFileImageCloudinary(req.file.path);
+  } else if (req?.files && req?.files?.length > 0) {
+    req?.files?.forEach(async (element) => {
+      await deleteFileImageCloudinary(element.path);
+    });
   }
   console.log(error);
   res.status(error.code || 500).json({

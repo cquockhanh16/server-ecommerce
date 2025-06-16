@@ -3,23 +3,23 @@
 Y/c: Nodejs+React+MySQL
 2. Xác định các chức năng sẽ thực hiện trong đề tài tương ứng với từng quyền người dùng
 Guest 
-•	Xem danh sách sản phẩm
-•	Xem chi tiết sản phẩm
-•	Tìm kiếm sản phẩm
+# •	//Xem danh sách sản phẩm 
+# •	//Xem chi tiết sản phẩm  
+# •	Tìm kiếm sản phẩm
 •	Lọc sản phẩm theo danh mục, giá, thương hiệu
 •	Xem banner, giới thiệu, thông tin liên hệ
-•	Đăng ký tài khoản
-•	Đăng nhập
+# •	Đăng ký tài khoản
+# •	Đăng nhập
 Customer 	
-•	Tất cả các chức năng của Guest
-•	Thêm sản phẩm vào danh sách yêu thích
-•	Giỏ hàng
+# •	Tất cả các chức năng của Guest
+# •	Thêm sản phẩm vào danh sách yêu thích
+# •	Giỏ hàng
 •	Áp dụng voucher giảm giá
 •	Thanh toán bằng phương thức mẫu Momo hoặc VNPay
 •	Xem lịch sử đơn hàng
 •	Bình luận và đánh giá sản phẩm sau khi mua hàng thành công
-•	Cập nhật, chỉnh sửa thông tin cá nhân
-•	Đổi mật khẩu
+# •	Cập nhật, chỉnh sửa thông tin cá nhân
+# •	Đổi mật khẩu
 Admin 
 •	Quản lý danh sách sản phẩm (CRUD)
 •	Quản lý danh mục sản phẩm

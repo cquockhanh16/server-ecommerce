@@ -6,7 +6,7 @@ const isValidString = (str) => {
 };
 
 const isValidNumber = (num) => {
-  if (num && !isEmpty(num) && !isNaN(num)) {
+  if (num && !isNaN(num)) {
     return true;
   }
   return false;

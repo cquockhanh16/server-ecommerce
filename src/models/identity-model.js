@@ -12,7 +12,7 @@ const identitySchema = mongoose.Schema({
   },
   password: String,
   phoneNumber: String,
-  address: [],
+  address: String,
   createdAt: {
     type: Number,
     default: () => moment().valueOf(),

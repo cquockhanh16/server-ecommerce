@@ -24,3 +24,5 @@ function authenticateJWT(req, res, next) {
     next(error);
   }
 }
+
+module.exports = { authenticateJWT };
