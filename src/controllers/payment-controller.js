@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-
+const Order = require("../models/order-model");
 require("dotenv").config();
 
 class PaymentController {
@@ -19,7 +19,6 @@ class PaymentController {
         signature,
         // ... các tham số khác từ Momo
       } = req.body;
-      console.log(req.body);
 
       // 1. Kiểm tra chữ ký (signature) để đảm bảo request hợp lệ từ Momo
       const rawSignature =
@@ -49,24 +48,25 @@ class PaymentController {
           .status(403)
           .json({ RspCode: 403, Message: "Invalid signature" });
       }
+      const startIndex = orderId.indexOf("-") + 1; // Tìm vị trí của dấu "-" đầu tiên và lấy phần sau nó
+      const orderIdd = orderId.substring(startIndex);
+      const updatedOrder = await Order.findOne({ orderId: orderIdd });
 
       // 2. Xử lý theo resultCode
       if (resultCode === 0) {
-        // Thanh toán thành công
-        // TODO: Cập nhật database, gửi email xác nhận,...
-        console.log(
-          `Payment successful for order ${orderId}, amount ${amount}`
-        );
-        // 3. Trả response cho Momo (bắt bộc)
+        if (updatedOrder) {
+          updatedOrder.paymentStatus = "paid";
+          await updatedOrder.save();
+        }
         return res.status(200).json({
           RspCode: 0,
           Message: "Confirm Success",
         });
       } else {
-        // Thanh toán thất bại
-        console.log(`Payment failed for order ${orderId}: ${message}`);
-        // TODO: Cập nhật trạng thái đơn hàng
-
+        if (updatedOrder) {
+          updatedOrder.paymentStatus = "error";
+          await updatedOrder.save();
+        }
         return res.status(200).json({
           RspCode: 0,
           Message: "Confirm Success",

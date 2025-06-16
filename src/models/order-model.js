@@ -39,6 +39,11 @@ const orderSchema = mongoose.Schema({
     default: "COD",
   },
   description: String,
+  paymentStatus: {
+    type: String,
+    enum: ["unpaid", "paid", "error"],
+    default: "unpaid",
+  },
   createdAt: {
     type: Number,
     default: () => moment().valueOf(),
