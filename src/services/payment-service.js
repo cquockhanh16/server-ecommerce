@@ -14,7 +14,7 @@ class PaymentService {
         var requestId = partnerCode + new Date().getTime() + "-" + orderIdd;
         var orderId = requestId;
         var orderInfo = "pay with MoMo";
-        var redirectUrl = "http://localhost:5173/san-pham-cam-do";
+        var redirectUrl = "https://www.youtube.com";
         var ipnUrl = "https://server-ecommerce-20bb.onrender.com/api/momo/ipn";
         var amount = +amountt;
         var requestType = "captureWallet";
