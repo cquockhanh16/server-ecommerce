@@ -19,7 +19,7 @@ class PaymentController {
         signature,
         // ... các tham số khác từ Momo
       } = req.body;
-
+      console.log(req.body);
       // 1. Kiểm tra chữ ký (signature) để đảm bảo request hợp lệ từ Momo
       const rawSignature =
         `accessKey=${process.env.MOMO_ACCESSKEY}` +
