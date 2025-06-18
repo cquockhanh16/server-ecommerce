@@ -18,4 +18,6 @@ router.post("/product/find", ProductController.findProductByName);
 
 router.get("/product/detail/:id", ProductController.getDetailProduct);
 
+router.get("/product/category/:id", ProductController.getProductsByCategory)
+
 module.exports = router;

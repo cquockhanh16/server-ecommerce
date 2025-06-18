@@ -9,7 +9,7 @@ const {
   isValidStringToArray,
   isValidNumber,
 } = require("../utils/validator");
-const { ValidatorError } = require("../models/error-model");
+const { ValidatorError, HttpError } = require("../models/error-model");
 const { createPaymentUrl } = require("./payment-service");
 class OrderService {
   static createOrder = (body) => {
@@ -129,6 +129,21 @@ class OrderService {
       }
     });
   };
+
+  static getOrderOfUser = (user) => {
+    return new Promise(async (res, rej) => {
+      try{
+        const existUser = await Identity.findById(user?.id);
+        if (!existUser) {
+          throw new HttpError("Người dùng không tồn tại", 404);
+        }
+        const orderList = await Order.find({userId: user.id});
+        res(orderList);
+      }catch(error){
+        rej(error)
+      }
+    })
+  }
 }
 
 module.exports = OrderService;

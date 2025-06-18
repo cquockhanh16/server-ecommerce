@@ -61,6 +61,22 @@ class ProductController {
       next(error);
     }
   };
+
+  static getProductsByCategory = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { query } = req;
+      const data = await ProductService.getProductsByCategory(id, query);
+      return res.status(200).json({
+        sts: true,
+        data,
+        err: null,
+        message: "Lấy danh sách sản phẩm theo danh mục thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = ProductController;

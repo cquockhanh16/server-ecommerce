@@ -31,4 +31,4 @@ Admin
 •	Thống kê sản phẩm, doanh thu, đơn hàng
 
 sort price, name, created, sold
-https://server-ecommerce-20bb.onrender.com
+https://server-ecommerce-20bb.onrender.com/api

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongoose').Types;
 const { DATA_PAGE, LIMIT_DATA_PAGE } = require("../configs/const-config");
 const { ValidatorError, HttpError } = require("../models/error-model");
 const Product = require("../models/product-model");
@@ -140,6 +141,47 @@ class ProductService {
       }
     });
   };
+
+  static getProductsByCategory = (id, query) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const { page, limit } = query;
+        const pageCurrent = +page || DATA_PAGE;
+        const limitCurrent = +limit || LIMIT_DATA_PAGE;
+        const option = { categoryId: new ObjectId(id) };
+        const [count, data] = await Promise.all([
+          ModelService.countDocumentOfModel(Product, option),
+          ModelService.getListOfModel(
+            Product,
+            {},
+            option,
+            {
+              page: pageCurrent,
+              limit: limitCurrent,
+            }
+          ),
+        ]);
+        count > 0
+          ? res({
+              data: data,
+              current_page: pageCurrent,
+              total_page: Math.ceil(count / limitCurrent),
+              total_data: count,
+              limit_per_page: limitCurrent,
+            })
+          : res({
+              data: [],
+              current_page: 1,
+              total_page: 0,
+              total_data: 0,
+              limit_per_page: limitCurrent,
+            });
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
+
 
   static getRelatedProduct = (id, optionRelated, limit) => {
     return new Promise(async (res, rej) => {
