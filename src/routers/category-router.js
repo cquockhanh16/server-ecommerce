@@ -5,6 +5,9 @@ const CategoryController = require("../controllers/category-controller");
 
 router.post("/category/create", CategoryController.createCategory);
 
-// router.post("/Category/list", CategoryController.getListCategory);
+router.get(
+  "/category/list-navbar",
+  CategoryController.getListCategoryOfNavbar
+);
 
 module.exports = router;

@@ -27,6 +27,43 @@ class CategoryService {
       }
     });
   };
+
+  static getListCategoryOfNavbar = () => {
+    return new Promise(async (res, rej) => {
+      try {
+        const category = await Category.find();
+        console.log(category);
+        const rootCategory = [];
+        for(let i = 0;i< category.length;i++){
+          const element = category[i];
+          if(!element.categoryRoot) {
+            rootCategory.push({
+              _id: element._id,
+              categoryName: element.categoryName,
+              categoryChild: []
+            })
+          }
+        }
+        for(let i = 0;i< category.length;i++){
+          const element = category[i];
+          for(let j = 0; j < rootCategory.length ; j++){
+            if (
+              element.categoryRoot &&
+              rootCategory[j]._id.toString() === element.categoryRoot
+            ) {
+              rootCategory[j].categoryChild.push({
+                _id: element._id,
+                categoryName: element.categoryName,
+              });
+            }
+          }
+        }
+        res(rootCategory);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
 }
 
 module.exports = CategoryService;

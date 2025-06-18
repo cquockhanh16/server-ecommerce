@@ -15,6 +15,20 @@ class CategoryController {
       next(error);
     }
   };
+
+  static getListCategoryOfNavbar = async (req, res, next) => {
+    try {
+      const data = await CategoryService.getListCategoryOfNavbar();
+      return res.status(200).json({
+        sts: true,
+        data: data,
+        err: null,
+        message: "Lấy danh sách danh mục của navbar",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = CategoryController;
