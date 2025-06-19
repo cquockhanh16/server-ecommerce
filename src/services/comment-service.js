@@ -8,7 +8,7 @@ class CommentService {
     static commentProductAfterOrder = (body, user) => {
         return new Promise(async (res, rej) => {
             try {
-                const existUser = await Identity.findById(user._id);
+                const existUser = await Identity.findById(user.id);
                 if (!existUser) {
                     throw new HttpError("Người dùng không tồn tại", 404);
                 }
