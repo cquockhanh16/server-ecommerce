@@ -29,6 +29,37 @@ class CategoryController {
       next(error);
     }
   };
+
+  static getListCategory = async (req, res, next) => {
+    try {
+      const { query } = req;
+      const data = await CategoryService.getListCategory(query);
+      return res.status(200).json({
+        sts: true,
+        data: data,
+        err: null,
+        message: "Lấy danh sách loại thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static updateCategory = async (req, res, next) => {
+    try {
+      const { body } = req;
+      const { id } = req.params;
+      const data = await CategoryService.updateCategory(id, body);
+      return res.status(200).json({
+        sts: true,
+        data: data,
+        err: null,
+        message: "Cập nhật loại thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = CategoryController;

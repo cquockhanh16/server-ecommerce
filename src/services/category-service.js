@@ -1,6 +1,8 @@
+const { LIMIT_DATA_PAGE, DATA_PAGE } = require("../configs/const-config");
 const Category = require("../models/category-model");
 const { ValidatorError } = require("../models/error-model");
 const { isValidString } = require("../utils/validator");
+const ModelService = require("./model-service");
 
 class CategoryService {
   static createCategory = (body) => {
@@ -32,7 +34,6 @@ class CategoryService {
     return new Promise(async (res, rej) => {
       try {
         const category = await Category.find();
-        console.log(category);
         const rootCategory = [];
         for(let i = 0;i< category.length;i++){
           const element = category[i];
@@ -64,6 +65,43 @@ class CategoryService {
       }
     });
   };
+
+  static getListCategory = (query={}, body={}) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const data = await this.getListCategoryOfNavbar();
+        res(data);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
+
+  static updateCategory = (id, body) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const { categoryName, categoryRoot } = body;
+        const updateData = {};
+        isValidString(categoryName)
+          ? (updateData.categoryName = categoryName)
+          : "";
+        isValidString(categoryRoot)
+          ? (updateData.categoryRoot = categoryRoot)
+          : "";
+        const data = await Category.findByIdAndUpdate(
+          id,
+          { $set: updateData },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+        res(data);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  }
 }
 
 module.exports = CategoryService;

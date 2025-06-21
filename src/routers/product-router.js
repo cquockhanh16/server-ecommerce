@@ -12,6 +12,14 @@ router.post(
   ProductController.createProduct
 );
 
+router.patch(
+  "/product/update/:id",
+  upload.array("images", MAX_NUMBER_IMAGE_PRODUCT),
+  ProductController.updateProduct
+);
+
+router.delete("/product/delete/:id", ProductController.deleteProduct);
+
 router.post("/product/list", ProductController.getListProduct);
 
 router.post("/product/find", ProductController.findProductByName);

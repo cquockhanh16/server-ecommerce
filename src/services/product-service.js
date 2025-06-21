@@ -1,7 +1,10 @@
 const { ObjectId } = require('mongoose').Types;
 const { DATA_PAGE, LIMIT_DATA_PAGE } = require("../configs/const-config");
 const { ValidatorError, HttpError } = require("../models/error-model");
+
 const Product = require("../models/product-model");
+const Comment = require("../models/comment-model");
+const { deleteFileImageCloudinary } = require('../utils/delete-image');
 const {
   isValidString,
   isValidNumber,
@@ -91,6 +94,92 @@ class ProductService {
     });
   };
 
+  static updateProduct = (id, body, files) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const {
+          productName,
+          productQuantity,
+          productPrice,
+          productSize,
+          productMaterial,
+          productColor,
+          productDescription,
+          collectionId,
+          categoryId,
+          brandId,
+        } = body;
+        const optionUpdate = {};
+        if (isValidString(productName)) {
+          optionUpdate.productName = productName;
+        }
+        if (isValidNumber(productPrice)) {
+          optionUpdate.productPrice = productPrice;
+        }
+        if (isValidNumber(productQuantity)) {
+          optionUpdate.productQuantity = productQuantity;
+        }
+        if (isValidArray(productSize)) {
+          optionUpdate.productSize = productSize;
+        } else if (isValidStringToArray(productSize)) {
+          optionUpdate.productSize = JSON.parse(productSize);
+        } else if (isValidString(productSize)) {
+          optionUpdate.productSize = [productSize];
+        }
+        isValidString(productMaterial)
+          ? (optionUpdate.productMaterial = productMaterial)
+          : "";
+        if (isValidArray(productColor)) {
+          optionUpdate.productColor = productColor;
+        } else if (isValidStringToArray(productColor)) {
+          optionUpdate.productColor = JSON.parse(productColor);
+        } else if (isValidString(productColor)) {
+          optionUpdate.productColor = [productColor];
+        }
+        isValidString(productDescription)
+          ? (optionUpdate.productDescription = productDescription)
+          : "";
+        isValidString(collectionId)
+          ? (optionUpdate.collectionId = collectionId)
+          : "";
+        isValidString(categoryId) ? (optionUpdate.categoryId = categoryId) : "";
+        isValidString(brandId) ? (optionUpdate.brandId = brandId) : "";
+        if (isValidArray(files)) {
+          const arr = [];
+          files.forEach((element) => {
+            arr.push(element.path);
+          });
+          optionUpdate.productImages = [...arr];
+        }
+        const updateProduct = await Product.findByIdAndUpdate(
+          id,
+          { $set: optionUpdate },
+          { new: true, runValidators: true }
+        )
+        return res(updateProduct);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
+
+  static deleteProduct = (id) => {
+  return new Promise(async (res, rej) => {  
+    try {
+      const existProduct = await Product.findByIdAndDelete(id);
+      if (existProduct) { 
+        if (isValidArray(existProduct.productImages)) {
+          existProduct.productImages.forEach(async (element) => {
+            await deleteFileImageCloudinary(element);
+          });
+        }
+      }
+      res(existProduct);
+    } catch (error) {
+      rej(error);
+    }
+  })}
+
   static getListProduct = (query, body) => {
     return new Promise(async (res, rej) => {
       try {
@@ -151,15 +240,10 @@ class ProductService {
         const option = { categoryId: new ObjectId(id) };
         const [count, data] = await Promise.all([
           ModelService.countDocumentOfModel(Product, option),
-          ModelService.getListOfModel(
-            Product,
-            {},
-            option,
-            {
-              page: pageCurrent,
-              limit: limitCurrent,
-            }
-          ),
+          ModelService.getListOfModel(Product, {}, option, {
+            page: pageCurrent,
+            limit: limitCurrent,
+          }),
         ]);
         count > 0
           ? res({
@@ -182,7 +266,6 @@ class ProductService {
     });
   };
 
-
   static getRelatedProduct = (id, optionRelated, limit) => {
     return new Promise(async (res, rej) => {
       try {
@@ -197,6 +280,17 @@ class ProductService {
       }
     });
   };
+
+  static getCommentsOfProduct = (id, query) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const comments = await Comment.find({ productId: id });
+        res(comments);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  }
 
   static getDetailProduct = (id) => {
     return new Promise(async (res, rej) => {
@@ -225,10 +319,14 @@ class ProductService {
           { brandId: product.brandId },
           { collectionId: product.collectionId },
         ];
-        const relatedProduct = await this.getRelatedProduct(id, optionRelated);
+        const [relatedProduct, comments] = await Promise.all([
+          this.getRelatedProduct(id, optionRelated),
+          this.getCommentsOfProduct(id),
+        ]);
         res({
           detail: product,
           relatedProduct,
+          comments,
         });
       } catch (error) {
         rej(error);

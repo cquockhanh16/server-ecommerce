@@ -30,6 +30,21 @@ class AuthController {
       next(error);
     }
   };
+
+  static logout = async (req, res, next) => {
+    try {
+      const { user } = req;
+      const iden = await AuthService.logout(user);
+      res.status(200).json({
+        sts: true,
+        data: iden,
+        err: null,
+        message: "Đăng xuất thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = AuthController;

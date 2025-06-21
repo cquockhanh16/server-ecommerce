@@ -109,6 +109,28 @@ class AuthService {
       }
     });
   };
+
+  static logout = (user) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const { id } = user;
+        if (!isValidString(id)) {
+          throw new ValidatorError("ID không được để trống", "id", id);
+        }
+        const result = await Identity.findOneAndUpdate(
+          { _id: id },
+          { $set: { status: "off" } },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+        res(result);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
 }
 
 module.exports = AuthService;

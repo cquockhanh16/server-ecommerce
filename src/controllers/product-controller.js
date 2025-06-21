@@ -16,6 +16,37 @@ class ProductController {
     }
   };
 
+  static updateProduct = async (req, res, next) => {
+    try {
+      const { body, files } = req;
+      const { id } = req.params;
+      const newProduct = await ProductService.updateProduct(id, body, files);
+      return res.status(200).json({
+        sts: true,
+        data: newProduct,
+        err: null,
+        message: "Cập nhật sản phẩm thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static deleteProduct = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const newProduct = await ProductService.deleteProduct(id);
+      return res.status(200).json({
+        sts: true,
+        data: newProduct,
+        err: null,
+        message: "Xóa sản phẩm thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   static getListProduct = async (req, res, next) => {
     try {
       const { body, query } = req;

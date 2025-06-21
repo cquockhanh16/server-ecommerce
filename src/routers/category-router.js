@@ -10,4 +10,8 @@ router.get(
   CategoryController.getListCategoryOfNavbar
 );
 
+router.get("/category/list", CategoryController.getListCategory);
+
+router.patch("/category/update/:id", CategoryController.updateCategory);
+
 module.exports = router;
