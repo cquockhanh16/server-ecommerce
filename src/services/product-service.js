@@ -109,6 +109,13 @@ class ProductService {
           categoryId,
           brandId,
         } = body;
+        const existProduct = await Product.findById(id);
+        if (!existProduct) {
+          throw new HttpError(
+            "Sản phẩm không tồn tại",
+            404
+          );
+        }
         const optionUpdate = {};
         if (isValidString(productName)) {
           optionUpdate.productName = productName;
@@ -144,13 +151,18 @@ class ProductService {
           : "";
         isValidString(categoryId) ? (optionUpdate.categoryId = categoryId) : "";
         isValidString(brandId) ? (optionUpdate.brandId = brandId) : "";
-        if (isValidArray(files)) {
-          const arr = [];
-          files.forEach((element) => {
-            arr.push(element.path);
+        if (isValidArray(existProduct.productImages) && files && files.length > 0) {
+          existProduct.productImages.forEach(async (element) => {
+            await deleteFileImageCloudinary(element);
           });
-          optionUpdate.productImages = [...arr];
         }
+          if (isValidArray(files)) {
+            const arr = [];
+            files.forEach((element) => {
+              arr.push(element.path);
+            });
+            optionUpdate.productImages = [...arr];
+          }
         const updateProduct = await Product.findByIdAndUpdate(
           id,
           { $set: optionUpdate },
@@ -284,7 +296,11 @@ class ProductService {
   static getCommentsOfProduct = (id, query) => {
     return new Promise(async (res, rej) => {
       try {
-        const comments = await Comment.find({ productId: id });
+        const comments = await Comment.find({ productId: id }).populate({
+          "path": "commenter",
+          "model": "Identity",
+          "select": "firstName lastName avatar",
+        }).sort({ createdAt: -1 });
         res(comments);
       } catch (error) {
         rej(error);

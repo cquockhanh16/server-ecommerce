@@ -14,18 +14,18 @@ Customer
 # •	Tất cả các chức năng của Guest
 # •	Thêm sản phẩm vào danh sách yêu thích
 # •	Giỏ hàng
-•	Áp dụng voucher giảm giá
-•	Thanh toán bằng phương thức mẫu Momo hoặc VNPay
-•	Xem lịch sử đơn hàng
-•	Bình luận và đánh giá sản phẩm sau khi mua hàng thành công
+# •	Áp dụng voucher giảm giá
+# •	Thanh toán bằng phương thức mẫu Momo hoặc VNPay
+# •	Xem lịch sử đơn hàng
+# •	Bình luận và đánh giá sản phẩm sau khi mua hàng thành công
 # •	Cập nhật, chỉnh sửa thông tin cá nhân
 # •	Đổi mật khẩu
 Admin 
-•	Quản lý danh sách sản phẩm (CRUD)
-•	Quản lý danh mục sản phẩm
-•	Quản lý người dùng 
-•	Quản lý đơn hàng 
-•	Quản lý mã giảm giá 
+# •	Quản lý danh sách sản phẩm (CRUD)
+# •	Quản lý danh mục sản phẩm
+# •	Quản lý người dùng 
+# •	Quản lý đơn hàng 
+# •	Quản lý mã giảm giá 
 •	Quản lý bình luận, đánh giá
 •	Quản lý nội dung banner, bài viết, thông tin trang web
 •	Thống kê sản phẩm, doanh thu, đơn hàng

@@ -2,9 +2,10 @@ const { ValidatorError, HttpError } = require("../models/error-model");
 const bcrypt = require("bcrypt");
 const Identity = require("../models/identity-model");
 const { isValidString, isValidEmail } = require("../utils/validator");
+const { deleteFileImageCloudinary } = require("../utils/delete-image");
 
 class IdentityService {
-  static updateIdentity = (body, user) => {
+  static updateIdentity = (body, user, file={}) => {
     return new Promise(async (res, rej) => {
       try {
         const {
@@ -20,7 +21,13 @@ class IdentityService {
         if (!existUser) {
           throw new HttpError("Người dùng không tồn tại", 404);
         }
+        if (existUser.avatar && file && file.path) {
+          await deleteFileImageCloudinary(existUser.avatar);
+        }
         const optionUpdate = {};
+        if(file && isValidString(file.path)) {
+          optionUpdate.avatar = file.path;
+        }
         if (firstName && !isValidString(firstName)) {
           throw new ValidatorError(
             "Họ đệm không được để trống",
@@ -95,6 +102,41 @@ class IdentityService {
       }
     });
   };
+
+  static getListIdentity = () => {
+    return new Promise(async (res, rej) => {
+      try {
+        const identities = await Identity.find().select("-password");
+        res(identities);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
+
+  static lockIdentity = (id, body={}) => {
+    return new Promise((res, rej) => {
+      try {
+        let optionUpdate = {};
+        if(body.status === "lock"){
+          optionUpdate.status = body.status;
+        }
+        else{
+          optionUpdate.status = "off";
+        }
+        const identity = Identity.findByIdAndUpdate(
+          id,
+          optionUpdate,
+          {
+            new: true,
+          }
+        );
+        res(identity);
+      } catch (error) {
+        rej(error)
+      }
+    })
+  }
 }
 
 module.exports = IdentityService;

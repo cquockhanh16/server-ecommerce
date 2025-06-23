@@ -13,6 +13,9 @@ const identitySchema = mongoose.Schema({
   password: String,
   phoneNumber: String,
   address: String,
+  avatar: {
+    type: String
+  },
   createdAt: {
     type: Number,
     default: () => moment().valueOf(),

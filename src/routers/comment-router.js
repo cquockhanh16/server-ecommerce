@@ -10,4 +10,12 @@ router.post(
   CommentController.commentProductAfterOrder
 );
 
+router.get(
+  "/comment/list", CommentController.getListComment
+);
+
+router.delete(
+  "/comment/delete/:id", CommentController.deleteComment
+);
+
 module.exports = router;

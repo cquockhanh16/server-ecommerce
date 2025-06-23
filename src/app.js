@@ -19,7 +19,7 @@ const limiter = expressRateLimit({
 const { deleteFileImageCloudinary } = require("./utils/delete-image");
 
 const connectDB = require("./configs/db-config");
-// const setupCronJobs = require("./configs/cron-config");
+const setupCronJobs = require("./configs/cron-config");
 
 // require router
 const productRouter = require("./routers/product-router");
@@ -31,6 +31,8 @@ const identityRouter = require("./routers/identity-router");
 const orderRouter = require("./routers/order-router");
 const paymentRouter = require("./routers/payment-router");
 const commentRouter = require("./routers/comment-router");
+const voucherRouter = require("./routers/voucher-router");
+const bannerRouter = require("./routers/banner-router");
 
 app.set("view engine", "ejs"); // Đặt view engine là EJS
 app.set("views", path.join(__dirname, "views")); // Thư mục chứa các file EJS
@@ -70,6 +72,8 @@ app.use("/api", identityRouter);
 app.use("/api", orderRouter);
 app.use("/api", paymentRouter);
 app.use("/api", commentRouter);
+app.use("/api", voucherRouter);
+app.use("/api", bannerRouter);
 
 // handle api not declared
 app.use((req, res) => {

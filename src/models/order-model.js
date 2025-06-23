@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
+const { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } = require("../configs/const-config");
 
 const orderSchema = mongoose.Schema({
   orderId: {
@@ -30,19 +31,23 @@ const orderSchema = mongoose.Schema({
   discountValue: Number,
   status: {
     type: String,
-    enum: ["pending", "confirmed", "shipping", "completed", "cancelled"],
+    enum: ORDER_STATUS,
     default: "pending",
   },
   paymentMethod: {
     type: String,
-    enum: ["COD", "BANK"],
+    enum: PAYMENT_METHOD,
     default: "COD",
   },
   description: String,
   paymentStatus: {
     type: String,
-    enum: ["unpaid", "paid", "error"],
+    enum: PAYMENT_STATUS,
     default: "unpaid",
+  },
+  isInventoryRestored: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Number,

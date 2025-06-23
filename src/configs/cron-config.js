@@ -1,12 +1,13 @@
 const cron = require("node-cron");
-const { checkExpiredProducts } = require("../services/pawn-product-service");
+const { handleFailedOrders } = require("../services/order-service");
+
 
 function setupCronJobs() {
   //   Job kiểm tra sản phẩm quá hạn hàng ngày
   cron.schedule(
     "*/10 * * * *",
     async () => {
-      await checkExpiredProducts();
+      await handleFailedOrders();
     },
     {
       scheduled: true,

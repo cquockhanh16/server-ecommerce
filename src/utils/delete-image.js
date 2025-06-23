@@ -6,6 +6,7 @@ async function deleteFileImageCloudinary(path) {
       path.split("/").pop().split(".")[0]
     }`;
     await cloudinary.uploader.destroy(publib_id);
+    console.log("Image deleted successfully from Cloudinary");
   } catch (error) {}
 }
 

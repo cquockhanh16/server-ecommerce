@@ -13,9 +13,9 @@ const commentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  commenterName: {
-    type: String,
-    required: true,
+  commenter: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Identity",
   },
   updatedAt: {
     type: Number,

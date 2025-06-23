@@ -16,9 +16,24 @@ class OrderController {
     }
   };
 
+  static updateOrder = async (req, res, next) => {
+    try {
+      const { body, params } = req;
+      const updatedOrder = await OrderService.updateOrder(params.id, body);
+      res.status(200).json({
+        sts: true,
+        data: updatedOrder,
+        err: null,
+        mes: "Cập nhật đơn hàng thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   static getOrderOfUser = async (req, res, next) => {
     try {
-      const {user} = req;
+      const { user } = req;
       const orders = await OrderService.getOrderOfUser(user);
       res.status(200).json({
         sts: true,
@@ -30,6 +45,23 @@ class OrderController {
       next(error);
     }
   };
+
+  static getListOrder = async (req, res, next) => {
+    try {
+      const { query } = req;
+      const orders = await OrderService.getListOrder(query);
+      res.status(200).json({
+        sts: true,
+        data: orders,
+        err: null,
+        mes: "Lấy danh sách đơn hàng thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
 }
 
 module.exports = OrderController;
