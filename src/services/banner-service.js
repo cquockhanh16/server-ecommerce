@@ -86,7 +86,9 @@ class BannerService{
                 {
                   createdAt: -1, // Sắp xếp theo ngày tạo mới nhất
                 },
-                {},
+                {
+                  isActive: true, // Lọc chỉ lấy banner đang hoạt động
+                },
                 {
                   page: pageCurrent,
                   limit: limitCurrent,
