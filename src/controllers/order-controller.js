@@ -46,6 +46,22 @@ class OrderController {
     }
   };
 
+  static cancelOrderByUser = async (req, res, next) => {
+    try {
+      const { user } = req;
+      const { id } = req.params;
+      const order = await OrderService.cancelOrderByUser(id, user);
+      res.status(200).json({
+        sts: true,
+        data: order,
+        err: null,
+        mes: "Hủy đơn hàng thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   static getListOrder = async (req, res, next) => {
     try {
       const { query } = req;

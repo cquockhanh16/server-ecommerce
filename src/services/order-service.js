@@ -12,7 +12,12 @@ const {
 const { ValidatorError, HttpError } = require("../models/error-model");
 const { createPaymentUrl } = require("./payment-service");
 const ModelService = require("./model-service");
-const { DATA_PAGE, LIMIT_DATA_PAGE, PAYMENT_STATUS, ORDER_STATUS } = require("../configs/const-config");
+const {
+  DATA_PAGE,
+  LIMIT_DATA_PAGE,
+  PAYMENT_STATUS,
+  ORDER_STATUS,
+} = require("../configs/const-config");
 const { default: mongoose } = require("mongoose");
 class OrderService {
   static createOrder = (body) => {
@@ -128,13 +133,12 @@ class OrderService {
           });
           res({ ...objOrder._doc, urlPayment });
         } else {
-          
           res(nOrder);
         }
       } catch (error) {
         await session.abortTransaction();
         rej(error);
-      }finally {
+      } finally {
         session.endSession();
       }
     });
@@ -263,6 +267,44 @@ class OrderService {
         rej(error);
       } finally {
         session.endSession();
+      }
+    });
+  };
+
+  static cancelOrderByUser = (id, user) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const existOrder = await Order.findOne({
+          _id: id,
+          userId: user.id,
+        });
+        if (!existOrder) {
+          throw new HttpError(
+            "Đơn hàng không tồn tại hoặc không thuộc về người dùng",
+            404
+          );
+        }
+        if (existOrder.status === "cancelled") {
+          throw new ValidatorError("Đơn hàng đã bị huỷ", "status", "cancelled");
+        }
+        existOrder.status = "cancelled";
+        existOrder.paymentStatus = "error";
+        existOrder.isInventoryRestored = false;
+        const products = [...existOrder.products];
+        if (products?.length > 0) {
+          for (let index = 0; index < products?.length; index++) {
+            const existProduct = await Product.findById(products[index]?._id);
+            if (existProduct) {
+              existProduct.productQuantity += products[index]?.productQuantity;
+              existProduct.soldAmount -= products[index]?.productQuantity;
+              await existProduct.save();
+            }
+          }
+        }
+        await existOrder.save();
+        res(existOrder);
+      } catch (error) {
+        rej(error);
       }
     });
   };

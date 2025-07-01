@@ -11,4 +11,6 @@ router.get("/order/list", OrderController.getListOrder);
 
 router.patch("/order/update/:id", OrderController.updateOrder);
 
+router.patch("/order/cancel/:id", authenticateJWT, OrderController.cancelOrderByUser);
+
 module.exports = router;
