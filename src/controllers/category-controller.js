@@ -60,6 +60,21 @@ class CategoryController {
       next(error);
     }
   };
+
+  static deleteCategory = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await CategoryService.deleteCategory(id);
+      return res.status(200).json({
+        sts: true,
+        data: data,
+        err: null,
+        message: "Xóa loại thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = CategoryController;

@@ -13,7 +13,7 @@ const voucherSchema = mongoose.Schema({
   },
   expiryDate: {
     type: Number, // Hoặc Date
-    required: true,
+    default: null,
   },
   isActive: {
     type: Boolean,

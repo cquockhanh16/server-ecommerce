@@ -35,19 +35,19 @@ class CategoryService {
       try {
         const category = await Category.find();
         const rootCategory = [];
-        for(let i = 0;i< category.length;i++){
+        for (let i = 0; i < category.length; i++) {
           const element = category[i];
-          if(!element.categoryRoot) {
+          if (!element.categoryRoot) {
             rootCategory.push({
               _id: element._id,
               categoryName: element.categoryName,
-              categoryChild: []
-            })
+              categoryChild: [],
+            });
           }
         }
-        for(let i = 0;i< category.length;i++){
+        for (let i = 0; i < category.length; i++) {
           const element = category[i];
-          for(let j = 0; j < rootCategory.length ; j++){
+          for (let j = 0; j < rootCategory.length; j++) {
             if (
               element.categoryRoot &&
               rootCategory[j]._id.toString() === element.categoryRoot
@@ -66,7 +66,7 @@ class CategoryService {
     });
   };
 
-  static getListCategory = (query={}, body={}) => {
+  static getListCategory = (query = {}, body = {}) => {
     return new Promise(async (res, rej) => {
       try {
         const data = await this.getListCategoryOfNavbar();
@@ -101,7 +101,18 @@ class CategoryService {
         rej(error);
       }
     });
-  }
+  };
+
+  static deleteCategory = (id) => {
+    return new Promise(async (res, rej) => {
+      try {
+         await Category.findByIdAndDelete(id);
+        res({});
+      } catch (error) {
+        rej(error);
+      }
+    });
+  };
 }
 
 module.exports = CategoryService;

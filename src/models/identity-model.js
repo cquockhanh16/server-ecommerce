@@ -16,6 +16,7 @@ const identitySchema = mongoose.Schema({
   avatar: {
     type: String
   },
+
   createdAt: {
     type: Number,
     default: () => moment().valueOf(),
@@ -26,6 +27,10 @@ const identitySchema = mongoose.Schema({
   status: {
     type: String,
     enum: ["off", "on", "lock"],
+  },
+  orderCount: {
+    type: Number,
+    default: 0,
   },
   lastPasswordChange: [],
   role: {

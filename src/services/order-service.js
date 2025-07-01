@@ -124,6 +124,9 @@ class OrderService {
         description ? (objOrder.description = description) : "";
         objOrder.paymentMethod = paymentMethod;
         objOrder.orderId = `ORDER_${randomUUID()}`;
+        await Identity.findByIdAndUpdate(existUser?._id, {
+          $inc: { orderCount: 1 },
+        });
         const nOrder = await objOrder.save();
         await session.commitTransaction();
         if (objOrder.paymentMethod === "BANK") {
@@ -146,6 +149,8 @@ class OrderService {
 
   static updateOrder = (id, body) => {
     return new Promise(async (res, rej) => {
+      const session = await mongoose.startSession();
+      session.startTransaction();
       try {
         const { status, paymentStatus } = body;
         const objUpdate = {};
@@ -169,14 +174,32 @@ class OrderService {
           }
           objUpdate.paymentStatus = paymentStatus;
         }
-        const existOrder = Order.findByIdAndUpdate(
+        if(status === "cancelled" || paymentStatus === "error") {
+          objUpdate.isInventoryRestored = false;
+        }
+        const existOrder = await Order.findByIdAndUpdate(
           id,
           { $set: objUpdate },
           { new: true }
         );
+        if (existOrder?.userId){
+          const existUser = await Identity.findById(existOrder?.userId);
+          if (
+            existUser &&
+            (status === "cancelled" || paymentStatus === "error")
+          ) {
+            await Identity.findByIdAndUpdate(existUser?._id, {
+              $set: { orderCount: existUser?.orderCount - 1 },
+            });
+          }
+        }
+        await session.commitTransaction(); 
         res(existOrder);
       } catch (error) {
+        await session.abortTransaction();
         rej(error);
+      }finally{
+        session.endSession();
       }
     });
   };
@@ -273,11 +296,16 @@ class OrderService {
 
   static cancelOrderByUser = (id, user) => {
     return new Promise(async (res, rej) => {
+      const session = await mongoose.startSession();
+      session.startTransaction();
       try {
-        const existOrder = await Order.findOne({
-          _id: id,
-          userId: user.id,
-        });
+        const [existOrder, existUser] = await Promise.all([
+          Order.findOne({
+            _id: id,
+            userId: user.id,
+          }),
+          Identity.findById(user.id),
+        ]);
         if (!existOrder) {
           throw new HttpError(
             "Đơn hàng không tồn tại hoặc không thuộc về người dùng",
@@ -301,10 +329,19 @@ class OrderService {
             }
           }
         }
-        await existOrder.save();
+        await Promise.all([
+          existOrder.save(),
+          Identity.findByIdAndUpdate(existUser?._id, {
+            $set: { orderCount: existUser?.orderCount - 1 },
+          }),
+        ])
+        await session.commitTransaction(); 
         res(existOrder);
       } catch (error) {
+        await session.abortTransaction();
         rej(error);
+      }finally{
+        session.endSession();
       }
     });
   };
