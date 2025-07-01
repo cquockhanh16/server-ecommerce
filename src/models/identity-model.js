@@ -12,7 +12,7 @@ const identitySchema = mongoose.Schema({
   },
   password: String,
   phoneNumber: String,
-  address: String,
+  address: [],
   avatar: {
     type: String
   },

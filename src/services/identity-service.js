@@ -5,7 +5,7 @@ const { isValidString, isValidEmail } = require("../utils/validator");
 const { deleteFileImageCloudinary } = require("../utils/delete-image");
 
 class IdentityService {
-  static updateIdentity = (body, user, file={}) => {
+  static updateIdentity = (body, user, file = {}) => {
     return new Promise(async (res, rej) => {
       try {
         const {
@@ -25,7 +25,7 @@ class IdentityService {
           await deleteFileImageCloudinary(existUser.avatar);
         }
         const optionUpdate = {};
-        if(file && isValidString(file.path)) {
+        if (file && isValidString(file.path)) {
           optionUpdate.avatar = file.path;
         }
         if (firstName && !isValidString(firstName)) {
@@ -88,7 +88,7 @@ class IdentityService {
         lastName ? (optionUpdate.lastName = lastName) : "";
         email ? (optionUpdate.email = email) : "";
         phoneNumber ? (optionUpdate.phoneNumber = phoneNumber) : "";
-        address ? (optionUpdate.address = address) : "";
+        address ? (optionUpdate.address = [...existUser.address, address]) : "";
         const updatedUser = await Identity.findOneAndUpdate(
           { _id: user?.id },
           optionUpdate,
@@ -114,29 +114,24 @@ class IdentityService {
     });
   };
 
-  static lockIdentity = (id, body={}) => {
+  static lockIdentity = (id, body = {}) => {
     return new Promise((res, rej) => {
       try {
         let optionUpdate = {};
-        if(body.status === "lock"){
+        if (body.status === "lock") {
           optionUpdate.status = body.status;
-        }
-        else{
+        } else {
           optionUpdate.status = "off";
         }
-        const identity = Identity.findByIdAndUpdate(
-          id,
-          optionUpdate,
-          {
-            new: true,
-          }
-        );
+        const identity = Identity.findByIdAndUpdate(id, optionUpdate, {
+          new: true,
+        });
         res(identity);
       } catch (error) {
-        rej(error)
+        rej(error);
       }
-    })
-  }
+    });
+  };
 }
 
 module.exports = IdentityService;
