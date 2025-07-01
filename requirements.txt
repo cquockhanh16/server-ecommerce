@@ -26,7 +26,7 @@ Admin
 # •	Quản lý người dùng 
 # •	Quản lý đơn hàng 
 # •	Quản lý mã giảm giá 
-•	Quản lý bình luận, đánh giá
+# •	Quản lý bình luận, đánh giá
 •	Quản lý nội dung banner, bài viết, thông tin trang web
 •	Thống kê sản phẩm, doanh thu, đơn hàng
 

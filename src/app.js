@@ -9,7 +9,7 @@ const expressRateLimit = require("express-rate-limit");
 const app = express();
 const limiter = expressRateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 100, // Giới hạn mỗi IP 100 request trong 15 phút
+  max: 100000, // Giới hạn mỗi IP 100 request trong 15 phút
   message: "Quá nhiều request từ IP này, vui lòng thử lại sau 15 phút",
   validate: {
     trustProxy: false, // Tắt validate trust proxy nếu bạn đã cấu hình ở app level
