@@ -89,7 +89,7 @@ class AuthService {
         }
         const token = generateTokens(
           { id: existIdentity._id, role: existIdentity.role },
-          "1h",
+          "7d",
           "30d"
         );
         const result = await Identity.findOneAndUpdate(
