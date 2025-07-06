@@ -69,8 +69,36 @@ class CategoryService {
   static getListCategory = (query = {}, body = {}) => {
     return new Promise(async (res, rej) => {
       try {
-        const data = await this.getListCategoryOfNavbar();
-        res(data);
+        const { page, limit } = query;
+        const pageCurrent = +page || DATA_PAGE;
+        const limitCurrent = +limit || LIMIT_DATA_PAGE;
+        const [count, data] = await Promise.all([
+          ModelService.countDocumentOfModel(Category),
+          ModelService.getListOfModel(
+            Category,
+            {},
+            {},
+            {
+              page: pageCurrent,
+              limit: limitCurrent,
+            }
+          ),
+        ]);
+        count > 0
+          ? res({
+              data: data,
+              current_page: pageCurrent,
+              total_page: Math.ceil(count / limitCurrent),
+              total_data: count,
+              limit_per_page: limitCurrent,
+            })
+          : res({
+              data: [],
+              current_page: 1,
+              total_page: 0,
+              total_data: 0,
+              limit_per_page: limitCurrent,
+            });
       } catch (error) {
         rej(error);
       }
