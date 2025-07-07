@@ -33,6 +33,7 @@ const paymentRouter = require("./routers/payment-router");
 const commentRouter = require("./routers/comment-router");
 const voucherRouter = require("./routers/voucher-router");
 const bannerRouter = require("./routers/banner-router");
+const dashboardRouter = require("./routers/dashboard-router");
 
 app.set("view engine", "ejs"); // Đặt view engine là EJS
 app.set("views", path.join(__dirname, "views")); // Thư mục chứa các file EJS
@@ -74,6 +75,7 @@ app.use("/api", paymentRouter);
 app.use("/api", commentRouter);
 app.use("/api", voucherRouter);
 app.use("/api", bannerRouter);
+app.use("/api", dashboardRouter);
 
 // handle api not declared
 app.use((req, res) => {
