@@ -98,8 +98,8 @@ class OrderService {
         for (let index = 0; index < products?.length; index++) {
           const existProduct = await Product.findById(products[index]?._id);
           if (
-            products[index]?.productQuantity > existProduct?.productQuantity &&
-            existProduct
+            !existProduct ||
+            products[index]?.productQuantity > existProduct?.productQuantity
           ) {
             throw new ValidatorError(
               `${existProduct?.productName} không đủ số lượng`,
